@@ -21,17 +21,18 @@ class DBStorage:
 
     def __init__(self):
         """Connect to a database and initiate a session"""
-        env = getenv('HBNB_ENV', 'dev')
         url = {
             'drivername': 'mysql+mysqldb',
-            'username': getenv('HBNB_MYSQL_USER', 'hbnb_{}'.format(env)),
-            'password': getenv('HBNB_MYSQL_PWD', 'hbnb_{}_pwd'.format(env)),
-            'host': getenv('HBNB_MYSQL_HOST', 'localhost'),
-            'port': getenv('HBNB_MYSQL_PORT', 3306),
-            'database': getenv('HBNB_MYSQL_DB', 'hbnb_{}_db'.format(env)),
+            'username': getenv('HBNB_MYSQL_USER'),
+            'password': getenv('HBNB_MYSQL_PWD'),
+            'host': getenv('HBNB_MYSQL_HOST'),
+            'port': getenv('HBNB_MYSQL_PORT'),
+            'database': getenv('HBNB_MYSQL_DB'),
         }
         self.__engine = create_engine(URL(**url), pool_pre_ping=True)
-        self.reload()
+        Base.metadata.create_all(self.__engine)
+        if getenv('HBNB_ENV') == 'test':
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -40,14 +41,13 @@ class DBStorage:
             returns a dictionary of objects
         """
         if cls is None:
-            results = self.__session.query(
-                User, State, City, Amenity, Place, Review
-            ).all()
+            classes = [User, State, City, Amenity, Place, Review]
+            return {'{}.{}'.format(type(obj).__name__, obj.id): obj
+                    for res in map(self.__session.query, classes)
+                    for obj in res.all()}
         else:
-            results = self.__session.query(cls).all()
-        return {
-            '.'.join([type(obj).__name__, obj.id]): obj for obj in results
-        }
+            return {'{}.{}'.format(type(obj).__name__, obj.id): obj
+                    for obj in self.__session.query(cls).all()}
 
     def new(self, obj):
         """sets __session to given obj
@@ -56,7 +56,6 @@ class DBStorage:
         """
         if obj:
             self.__session.add(obj)
-            self.save()
 
     def save(self):
         """SOME COMMENT
@@ -68,13 +67,10 @@ class DBStorage:
         """
         if obj:
             self.__session.delete(obj)
-            self.save()
 
     def reload(self):
         """INCOMPLETE serialize the file path to JSON file path
         """
-        if getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all(self.__engine)
         Base.metadata.create_all(self.__engine)
         Session = scoped_session(
             sessionmaker(bind=self.__engine, expire_on_commit=False)
