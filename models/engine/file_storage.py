@@ -60,7 +60,8 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """delete obj from __objects"""
+        """delete obj from __objects
+        """
         if isinstance(obj, BaseModel):
             key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in self.__objects:
