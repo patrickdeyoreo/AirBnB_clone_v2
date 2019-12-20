@@ -9,7 +9,10 @@ class State(BaseModel, Base):
     """This is the class for State
     Attributes:
         name: input name
+        cities: relationship to cities table
     """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship('City', cascade='all, delete-orphan')
+    cities = relationship(
+        'City', back_populates='state', cascade='all, delete-orphan'
+    )
