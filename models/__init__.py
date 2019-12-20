@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 """create a unique FileStorage instance for your application"""
-import models
 import os
+
+import models
 from models.base_model import BaseModel
 from models.amenity import Amenity
 from models.city import City

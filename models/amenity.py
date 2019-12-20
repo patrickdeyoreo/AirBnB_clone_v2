@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """This is the amenity class"""
-from models.base_model import Base, BaseModel
-from models.place import place_amenity_table
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+
+from models.base_model import Base, BaseModel
+from models.place import place_amenity_table
 
 
 class Amenity(BaseModel, Base):

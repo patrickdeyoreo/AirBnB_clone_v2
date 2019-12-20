@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """This is the place class"""
-import models
 import os
-from models.base_model import Base, BaseModel
+
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
+
+import models
+from models.base_model import Base, BaseModel
 
 
 place_amenity_table = Table(
