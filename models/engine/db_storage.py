@@ -15,7 +15,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 
 class DBStorage:
-    """class"""
+    """MySQL database storage engine"""
     __engine = None
     __session = None
 
@@ -25,8 +25,8 @@ class DBStorage:
             'drivername': 'mysql+mysqldb',
             'username': getenv('HBNB_MYSQL_USER'),
             'password': getenv('HBNB_MYSQL_PWD'),
-            'host': getenv('HBNB_MYSQL_HOST'),
-            'port': getenv('HBNB_MYSQL_PORT'),
+            'host': getenv('HBNB_MYSQL_HOST', 'localhost'),
+            'port': getenv('HBNB_MYSQL_PORT', 3306),
             'database': getenv('HBNB_MYSQL_DB'),
         }
         self.__engine = create_engine(URL(**url), pool_pre_ping=True)

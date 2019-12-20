@@ -14,15 +14,9 @@ class BaseModel:
     """This class will defines all common attributes/methods
     for other classes
     """
-    id = Column(
-        'id', String(60), nullable=False, primary_key=True, unique=True
-    )
-    created_at = Column(
-        'created_at', DateTime, default=datetime.utcnow(), nullable=False
-    )
-    updated_at = Column(
-        'updated_at', DateTime, default=datetime.utcnow(), nullable=False
-    )
+    id = Column(String(60), nullable=False, primary_key=True, unique=True)
+    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
 
     def __init__(self, *args, **kwargs):
         """Instantiation of base model class
@@ -49,8 +43,9 @@ class BaseModel:
         Return:
             returns a string of class name, id, and dictionary
         """
-        return "[{}] ({}) {}".format(
-            type(self).__name__, self.id, self.__dict__)
+        new_dict = {key: value for key, value in self.__dict__.items()
+                    if key != "_sa_instance_state"}
+        return "[{}] ({}) {}".format(type(self).__name__, self.id, new_dict)
 
     def __repr__(self):
         """return a string representaion
@@ -74,9 +69,9 @@ class BaseModel:
         Return:
             returns a dictionary of all the key values in __dict__
         """
-        my_dict["__class__"] = str(type(self).__name__)
-        my_dict["created_at"] = self.created_at.isoformat()
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        if "_sa_instance_state" in my_dict:
-            del my_dict["_sa_instance_state"]
-        return my_dict
+        new_dict = {key: value for key, value in self.__dict__.items()
+                    if key != "_sa_instance_state"}
+        new_dict["__class__"] = str(type(self).__name__)
+        new_dict["created_at"] = self.created_at.isoformat()
+        new_dict["updated_at"] = self.updated_at.isoformat()
+        return new_dict
