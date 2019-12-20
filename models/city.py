@@ -12,11 +12,11 @@ class City(BaseModel, Base):
         name: input name
         places: relationship between a city and places
     """
-    __tablename__ = "cities"
+    __tablename__ = 'cities'
 
     name = Column(String(128), nullable=False)
 
-    state_id = Column(String(60), ForeignKey("states.id"), nullable=False)
+    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
 
     places = relationship(
         'Place', backref='cities', cascade='all, delete-orphan'

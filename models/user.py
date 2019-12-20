@@ -14,7 +14,7 @@ class User(BaseModel, Base):
         last_name: last name
         places: relationship between a user and places
     """
-    __tablename__ = "users"
+    __tablename__ = 'users'
 
     email = Column(String(128), nullable=False)
 
