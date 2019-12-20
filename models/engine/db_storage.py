@@ -2,12 +2,12 @@
 """This is a DBStorage class for Airbnb"""
 import os
 from models.base_model import Base, BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
 from models.amenity import Amenity
+from models.city import City
 from models.place import Place
 from models.review import Review
+from models.state import State
+from models.user import User
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -24,11 +24,11 @@ class DBStorage:
         """
         url = {
             'drivername': 'mysql+mysqldb',
-            'username': os.getenv('HBNB_MYSQL_USER'),
-            'password': os.getenv('HBNB_MYSQL_PWD'),
+            'username': os.getenv('HBNB_MYSQL_USER', 'hbnb_dev'),
+            'password': os.getenv('HBNB_MYSQL_PWD', 'hbnb_dev_pwd'),
             'host': os.getenv('HBNB_MYSQL_HOST', 'localhost'),
             'port': os.getenv('HBNB_MYSQL_PORT', 3306),
-            'database': os.getenv('HBNB_MYSQL_DB'),
+            'database': os.getenv('HBNB_MYSQL_DB', 'hbnb_dev_db'),
         }
         self.__engine = create_engine(URL(**url), pool_pre_ping=True)
         if os.getenv('HBNB_ENV') == 'test':

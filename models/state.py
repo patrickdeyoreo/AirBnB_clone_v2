@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 """This is the state class"""
-import models
-import os
+import models, os
 from models.base_model import Base, BaseModel
-from models.city import City
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
@@ -27,8 +25,9 @@ class State(BaseModel, Base):
         def cities(self):
             """Get a list of cities associated with this state
             Return:
-                returns a list of all City instances with a state_id matching
+                return a list of all City instances with a state_id matching
                 the id of the current State
             """
-            return [city for city in models.storage.all(City).values()
+            objects = models.storage.all(models.city.City)
+            return [city for city in objects.values()
                     if city.state_id == self.id]

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This is the base model class for AirBnB"""
-import uuid
 import models
+import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,9 +15,7 @@ class BaseModel:
     for other classes
     """
     id = Column(String(60), nullable=False, primary_key=True, unique=True)
-
     created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
-
     updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
 
     def __init__(self, *args, **kwargs):
@@ -36,9 +34,12 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
-        else:
+        if self.id is None:
             self.id = str(uuid.uuid4())
+        if self.created_at is None:
             self.created_at = self.updated_at = datetime.now()
+        if self.updated_at is None:
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """returns a string
