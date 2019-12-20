@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """This is the place class"""
+import models
+import os
 from models.base_model import Base, BaseModel
+from models.review import Review
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -44,6 +47,17 @@ class Place(BaseModel, Base):
 
     amenity_ids = []
 
-    reviews = relationship(
-        'Review', backref='place', cascade='all, delete-orphan'
-    )
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        reviews = relationship(
+            'Review', backref='place', cascade='all, delete-orphan'
+        )
+    else:
+        @property
+        def reviews(self):
+            """Get a list of reviews associated with this place
+            Return:
+                returns a list of all Review instances with a place_id matching
+                the id of the current Place
+            """
+            return [review for review in models.storage.all(Review).values()
+                    if review.place_id == self.id]
