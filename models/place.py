@@ -6,6 +6,7 @@ from models.user import User
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
+
 class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
