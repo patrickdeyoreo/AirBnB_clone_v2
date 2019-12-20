@@ -27,9 +27,11 @@ class FileStorage:
             returns a dictionary of __object
         """
         if cls is None:
-            return self.__objects
+            return self.__objects.copy()
         else:
-            return [obj for obj in self.__objects if type(obj) is cls]
+            return {key: obj
+                    for key, obj in self.__objects.items()
+                    if type(obj) is cls}
 
     def new(self, obj):
         """sets __object to given obj
@@ -43,11 +45,10 @@ class FileStorage:
     def save(self):
         """serialize the file path to JSON file path
         """
-        my_dict = {}
-        for key, value in self.__objects.items():
-            my_dict[key] = value.to_dict()
+        new_dict = {key: obj.to_dict()
+                    for key, obj in self.__objects.items()}
         with open(self.__file_path, 'w', encoding="UTF-8") as f:
-            json.dump(my_dict, f)
+            json.dump(new_dict, f)
 
     def reload(self):
         """serialize the file path to JSON file path

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """This is the base model class for AirBnB"""
+from os import getenv
 from datetime import datetime
 from uuid import uuid4
 
@@ -36,12 +37,15 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
+
         if self.id is None:
             self.id = str(uuid4())
-        if self.created_at is None:
-            self.created_at = self.updated_at = datetime.now()
-        if self.updated_at is None:
-            self.updated_at = datetime.now()
+
+        if getenv('HBNB_TYPE_STORAGE') != 'db':
+            if self.created_at is None:
+                self.created_at = datetime.utcnow()
+            if self.updated_at is None:
+                self.updated_at = datetime.utcnow()
 
     def __str__(self):
         """returns a string
@@ -60,7 +64,7 @@ class BaseModel:
     def save(self):
         """updates the public instance attribute updated_at to current
         """
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
 

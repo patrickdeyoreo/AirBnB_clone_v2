@@ -42,7 +42,7 @@ class DBStorage:
             returns a dictionary of objects
         """
         if cls is None:
-            classes = [User, State, City, Amenity, Place, Review]
+            classes = {Amenity, City, Place, Review, State, User}
             return {'{}.{}'.format(type(obj).__name__, obj.id): obj
                     for res in map(self.__session.query, classes)
                     for obj in res}
