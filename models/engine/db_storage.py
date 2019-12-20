@@ -1,5 +1,3 @@
-"""incomplete edit"""
-
 #!/usr/bin/python3
 """This is a DBStorage class for Airbnb"""
 import json
@@ -10,24 +8,27 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+from os import getenv
+from sqlalchemy.engine.url import URL
+
 
 class DBStorage:
     """class"""
     __engine = None
     __session = None
-    
-    __init__(self):
+
+    def __init__(self):
         """INCOMPLETE"""
-        self.__engine = create_engine(
-            'mysql+mysqldb://{}:{}@{}:3306/{}'.format(
-                getenv('HBNB_MYSQL_USER'),
-                getenv('HBNB_MYSQL_PWD'),
-                getenv('HBNB_MYSQL_HOST'),
-                getenv('HBNB_MYSQL_DB'),
-                getenv(''),
-        )pool_pre_ping=True)
-        if getenv(HBNB_ENV) == 'test'
-      
+        url = {
+            'drivername': 'mysql+mysqldb',
+            'username': getenv('HBNB_MYSQL_USER', 'hbnb_dev'),
+            'password': getenv('HBNB_MYSQL_PWD', 'hbnb_dev_pwd'),
+            'host': getenv('HBNB_MYSQL_HOST', 'localhost'),
+            'port': getenv('HBNB_MYSQL_PORT', 3306),
+            'database': getenv('HBNB_MYSQL_DB', 'hbnb_dev_db'),
+        }
+        self.__engine = create_engine(URL(**url), pool_pre_ping=True)
+
     def all(self, cls=None):
         """INCOMPLETE returns a dictionary
         Return:

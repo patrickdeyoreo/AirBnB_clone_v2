@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 """This is the place class"""
 from models.base_model import Base, BaseModel
+from models.city import City
+from models.user import User
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 class Place(BaseModel, Base):
     """This is the class for Place
@@ -34,5 +37,5 @@ class Place(BaseModel, Base):
         'User', back_populates='places'
     )
     cities = relationship(
-        'Place', back_populates='places'
+        'City', back_populates='places'
     )
