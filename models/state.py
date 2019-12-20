@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """This is the state class"""
 import models
+import os
 from models.base_model import Base, BaseModel
 from models.city import City
-from os import getenv
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
@@ -15,9 +15,10 @@ class State(BaseModel, Base):
         cities: relationship to cities table
     """
     __tablename__ = "states"
+
     name = Column(String(128), nullable=False)
 
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         cities = relationship(
             'City', backref='state', cascade='all, delete-orphan'
         )
