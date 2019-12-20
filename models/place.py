@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """This is the place class"""
-from models.base_model import BaseModel
+from models.base_model import Base, BaseModel
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 
 class Place(BaseModel, Base):
