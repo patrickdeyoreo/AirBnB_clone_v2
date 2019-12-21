@@ -83,5 +83,6 @@ class TestBaseModel(unittest.TestCase):
         self.base.name = 'Brent'
         del self.base
 
+
 if __name__ == "__main__":
     unittest.main()
