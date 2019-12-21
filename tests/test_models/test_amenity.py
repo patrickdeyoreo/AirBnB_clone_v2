@@ -54,7 +54,7 @@ class TestAmenity(unittest.TestCase):
         self.assertEqual(type(self.amenity.name), str)
 
     
-        @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', 'file')
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db', 'file')
     def test_delete_amenity_file(self):
         """test if delete works"""
         self.amenity = Amenity()
