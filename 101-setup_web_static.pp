@@ -50,10 +50,8 @@ file { '/data/web_static/releases/test/index.html':
   content => $index_html,
 }
 
-file_line { 'hbnb_static':
-  path    => '/etc/nginx/sites-available/default',
-  line    => $hbnb_static_line,
-  match   => $hbnb_static_match,
+exec { "sed -i '/^\tlisten 80 default_server;$/a location /hbnb_static/ { alias /data/web_static/current/;":
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   require => Package['nginx'],
   notify  => Service['nginx'],
 }
