@@ -40,6 +40,8 @@ file { $data_dirs:
 file { '/data/web_static/current':
   ensure  => 'link',
   replace => 'yes',
+  owner   => 'ubuntu',
+  group   => 'ubuntu',
   target  => '/data/web_static/releases/test',
 }
 
@@ -50,7 +52,7 @@ file { '/data/web_static/releases/test/index.html':
   content => $index_html,
 }
 
-exec { "sed -i '/^\tlisten 80 default_server;$/a location /hbnb_static/ { alias /data/web_static/current/;":
+exec { "sed -i '/^\tlisten 80 default_server;$/i location /hbnb_static/ { alias /data/web_static/current/; }'":
   path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   require => Package['nginx'],
   notify  => Service['nginx'],
