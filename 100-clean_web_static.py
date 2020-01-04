@@ -72,7 +72,7 @@ def do_clean(number=0):
             "find {} -maxdepth 1 -type f -printf '%T@:%p\\0'".format(archives),
             "sort -rnz",
             "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
-            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'"
+            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
             "xargs -0 rm -f"
         ])
         local(archives_pipe)
@@ -82,7 +82,7 @@ def do_clean(number=0):
             "find {} -maxdepth 1 -type d -printf '%T@:%p\\0'".format(releases),
             "sort -rnz",
             "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
-            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'"
+            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
             "xargs -0 rm -rf"
         ])
         run(releases_pipe)
