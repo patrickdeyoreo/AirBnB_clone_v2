@@ -10,34 +10,35 @@ $index_html = "\
 </html>
 "
 
-$hbnb_static_match = '^\tlisten\s80\sdefault_server;$'
+$hbnb_static_match = '^\tlisten\s+80\s+default_server;$'
 $hbnb_static_line = "\
 	listen 80 default_server;
 
-	location /hbnb_static {
-		alias /data/web_static/current;
+	location /hbnb_static/ {
+		alias /data/web_static/current/;
 	}
 "
 
 package { 'nginx':
-  ensure => installed,
+  ensure  => 'installed',
+  provide => 'apt',
 }
 
 service { 'nginx':
-  ensure     => running,
+  ensure     => 'running',
   hasrestart => true,
   require    => Package['nginx'],
 }
 
 file { 'data':
-  ensure => directory,
+  ensure => 'directory',
   path   => '/data',
   owner  => 'ubuntu',
   group  => 'ubuntu',
 }
 
 file { 'web_static':
-  ensure  => directory,
+  ensure  => 'directory',
   path    => '/data/web_static',
   owner   => 'ubuntu',
   group   => 'ubuntu',
@@ -45,7 +46,7 @@ file { 'web_static':
 }
 
 file { 'releases':
-  ensure  => directory,
+  ensure  => 'directory',
   path    => '/data/web_static/releases',
   owner   => 'ubuntu',
   group   => 'ubuntu',
@@ -53,7 +54,7 @@ file { 'releases':
 }
 
 file { 'shared':
-  ensure  => directory,
+  ensure  => 'directory',
   path    => '/data/web_static/shared',
   owner   => 'ubuntu',
   group   => 'ubuntu',
@@ -61,7 +62,7 @@ file { 'shared':
 }
 
 file { 'test':
-  ensure  => directory,
+  ensure  => 'directory',
   path    => '/data/web_static/releases/test',
   owner   => 'ubuntu',
   group   => 'ubuntu',
@@ -69,15 +70,15 @@ file { 'test':
 }
 
 file { 'current':
-  ensure  => link,
-  replace => true,
+  ensure  => 'link',
+  replace => 'yes',
   path    => '/data/web_static/current',
   target  => '/data/web_static/releases/test',
   require => File['test'],
 }
 
 file { 'index_html':
-  ensure  => file,
+  ensure  => 'file',
   path    => '/data/web_static/releases/test/index.html',
   owner   => 'ubuntu',
   group   => 'ubuntu',
@@ -86,7 +87,7 @@ file { 'index_html':
 }
 
 file_line { 'hbnb_static':
-  ensure  => present,
+  ensure  => 'present',
   line    => $hbnb_static_line,
   match   => $hbnb_static_match,
   require => Package['nginx'],
