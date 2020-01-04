@@ -69,28 +69,21 @@ def do_clean(number=0):
     except ValueError:
         pass
     else:
-        def do_clean_cmd(path):
-            """
-            Generate a command to perform removal of outdated archives
-            """
-            commands = [
-                "find {} -maxdepth 1 -mindepth 1 -name {} -printf {}".format(
-                    quote(path), quote('web_static_*'), quote('%T@:%p\\0')
-                ),
-                "sort -rnz",
-                "cut -f {}- -d ''".format(
-                    number + 1 if number > 1 else 2
-                ),
-                "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
-                "xargs -0 rm -rf"
-            ]
-            return " | ".join(commands)
+        command = " | ".join([
+            "find {{}} -maxdepth 1 -mindepth 1 -name {} -printf {}".format(
+                quote('web_static_*'), quote('%T@:%p\\0')
+            ),
+            "sort -nrz",
+            "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
+            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
+            "xargs -0 rm -fr",
+        ])
 
         local_path = 'versions'
-        local(do_clean_cmd(local_path))
+        local(command.format(local_path))
 
         remote_path = join(sep, 'data', 'web_static', 'releases')
-        run(do_clean_cmd(remote_path))
+        run(command.format(remote_path))
 
 
 def deploy():
