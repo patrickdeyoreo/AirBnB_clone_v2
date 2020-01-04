@@ -2,17 +2,21 @@
 
 $index_html = "\
 <html>
-  <head></head>
-  <body>Hello World</body>
+  <head>
+  </head>
+  <body>
+    Hello World
+  </body>
 </html>
 "
 
-$hbnb_static_match = '^\tlocation\s+/\s+\{$'
+$hbnb_static_match = '^\tlisten\s80\sdefault_server;$'
 $hbnb_static_line = "\
+	listen 80 default_server;
+
 	location /hbnb_static {
 		alias /data/web_static/current;
 	}
-	location / {
 "
 
 package { 'nginx':
@@ -40,14 +44,6 @@ file { 'web_static':
   require => File['data'],
 }
 
-file { 'current':
-  ensure  => link,
-  replace => true,
-  path    => '/data/web_static/current',
-  target  => '/data/web_static/releases/test',
-  require => File['web_static'],
-}
-
 file { 'releases':
   ensure  => directory,
   path    => '/data/web_static/releases',
@@ -70,6 +66,14 @@ file { 'test':
   owner   => 'ubuntu',
   group   => 'ubuntu',
   require => File['releases'],
+}
+
+file { 'current':
+  ensure  => link,
+  replace => true,
+  path    => '/data/web_static/current',
+  target  => '/data/web_static/releases/test',
+  require => File['test'],
 }
 
 file { 'index_html':
