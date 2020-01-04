@@ -18,7 +18,7 @@ cat - >| /data/web_static/releases/test/index.html << 'EOF'
 </html>
 EOF
 
-ln -f -n -s releases/test /data/web_static/current
+ln -f -n -s /data/web_static/releases/test /data/web_static/current
 chown -h -R ubuntu:ubuntu /data
 
 sed -E -i '
