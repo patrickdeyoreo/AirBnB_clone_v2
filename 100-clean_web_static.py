@@ -62,8 +62,30 @@ def do_deploy(archive_path):
 
 def do_clean(number=0):
     """Remove out-of-date web_static archives"""
-    if number < 1:
-        number = 1
+    try:
+        number = int(number)
+    except ValueError:
+        pass
+    else:
+        archives = 'versions'
+        archives_pipe = " | ".join([
+            "find {} -maxdepth 1 -type f -printf '%T@:%p\\0'".format(archives),
+            "sort -rnz",
+            "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
+            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'"
+            "xargs -0 rm -f"
+        ])
+        local(archives_pipe)
+
+        releases = join(sep, 'data', 'web_static', 'releases')
+        releases_pipe = " | ".join([
+            "find {} -maxdepth 1 -type d -printf '%T@:%p\\0'".format(releases),
+            "sort -rnz",
+            "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
+            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'"
+            "xargs -0 rm -rf"
+        ])
+        run(releases_pipe)
 
 
 def deploy():
