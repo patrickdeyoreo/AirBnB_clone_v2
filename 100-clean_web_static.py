@@ -75,8 +75,8 @@ def do_clean(number=0):
             ),
             "sort -nrz",
             "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
-            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
-            "xargs -0 rm -fr",
+            "sed 's/[[:digit:].:]*://g'",
+            "xargs -0 rm -rf",
         ])
 
         local_path = 'versions'
