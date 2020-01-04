@@ -61,31 +61,36 @@ def do_deploy(archive_path):
 
 
 def do_clean(number=0):
-    """Remove out-of-date web_static archives"""
+    """
+    Remove out-of-date web_static archives
+    """
     try:
         number = int(number)
     except ValueError:
         pass
     else:
-        archives = 'versions'
-        archives_pipe = " | ".join([
-            "find {} -maxdepth 1 -type f -printf '%T@:%p\\0'".format(archives),
-            "sort -rnz",
-            "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
-            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
-            "xargs -0 rm -f"
-        ])
-        local(archives_pipe)
+        def do_clean_cmd(path):
+            """
+            Generate a command to perform removal of outdated archives
+            """
+            commands = [
+                "find {} -maxdepth 1 -mindepth 1 -name {} -printf {}".format(
+                    quote(path), quote('web_static_*'), quote('%T@:%p\\0')
+                ),
+                "sort -rnz",
+                "cut -f {}- -d ''".format(
+                    number + 1 if number > 1 else 2
+                ),
+                "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
+                "xargs -0 rm -rf"
+            ]
+            return " | ".join(commands)
 
-        releases = join(sep, 'data', 'web_static', 'releases')
-        releases_pipe = " | ".join([
-            "find {} -maxdepth 1 -type d -printf '%T@:%p\\0'".format(releases),
-            "sort -rnz",
-            "cut -f {}- -d ''".format(number + 1 if number > 1 else 2),
-            "sed 's/[[:digit:]]*\\.[[:digit:]]*://g'",
-            "xargs -0 rm -rf"
-        ])
-        run(releases_pipe)
+        local_path = 'versions'
+        local(do_clean_cmd(local_path))
+
+        remote_path = join(sep, 'data', 'web_static', 'releases')
+        run(do_clean_cmd(remote_path))
 
 
 def deploy():
