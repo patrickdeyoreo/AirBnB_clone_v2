@@ -5,30 +5,24 @@
 apt update
 apt -y install nginx
 
-mkdir -p /data/web_static/shared
-mkdir -p /data/web_static/releases/test
+ufw allow 'Nginx HTTP'
 
-cat - >| /data/web_static/releases/test/index.html << 'EOF'
+mkdir -p /data/web_static/shared /data/web_static/releases/test
+
+cat > /data/web_static/releases/test/index.html << 'EOF'
 <html>
   <head>
   </head>
   <body>
-    Holberton School
+    Hello World
   </body>
 </html>
 EOF
 
-ln -f -n -s /data/web_static/releases/test /data/web_static/current
-chown -h -R ubuntu:ubuntu /data
+ln -fns /data/web_static/releases/test /data/web_static/current
 
-sed -E -i '
-\@^\tlocation\s+/\s+\{$@!b
-i location /hbnb_static { alias /data/web_static/current; }
-: done
-n
-b done
-' /etc/nginx/sites-available/default
+chown -hR ubuntu:ubuntu /data
+
+sed -i '/^\tlisten 80 default_server;$/a location /hbnb_static/ { alias /data/web_static/current/; }' /etc/nginx/sites-available/default
 
 service nginx restart
-
-ufw allow 'Nginx HTTP'
