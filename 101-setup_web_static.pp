@@ -1,5 +1,13 @@
 # Set up Holberton web servers for the deployment of web_static
 
+$data_dirs =  [
+  '/data',
+  '/data/web_static',
+  '/data/web_static/releases',
+  '/data/web_static/releases/test',
+  '/data/web_static/shared',
+]
+
 $index_html = "\
 <html>
   <head>
@@ -9,19 +17,6 @@ $index_html = "\
   </body>
 </html>
 "
-$hbnb_static_match = '^\s*listen\s+80\s+default_server;\s*$'
-$hbnb_static_line = "\
-	location /hbnb_static/ {
-		alias /data/web_static/current/;
-	}
-	listen 80 default_server;
-"
-$data_dirs =  [ '/data',
-                '/data/web_static',
-                '/data/web_static/releases',
-                '/data/web_static/releases/test',
-                '/data/web_static/shared',
-]
 
 package { 'nginx': }
 
@@ -52,13 +47,16 @@ file { '/data/web_static/releases/test/index.html':
   content => $index_html,
 }
 
-exec { "sed -i '/^\tlisten 80 default_server;$/i location /hbnb_static/ { alias /data/web_static/current/; }'":
+exec { 'sed':
+  command => "sed -i \
+  '/^\tlisten 80 default_server;$/i location /hbnb_static/ { alias /data/web_static/current/; }' /etc/nginx/sites-available/default",
   path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   require => Package['nginx'],
   notify  => Service['nginx'],
 }
 
-exec { "ufw allow 'Nginx HTTP'":
+exec { 'ufw':
+  command => "ufw allow 'Nginx HTTP'",
   path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   require => Package['nginx'],
 }
