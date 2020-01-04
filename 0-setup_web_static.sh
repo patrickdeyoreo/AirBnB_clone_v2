@@ -10,8 +10,11 @@ mkdir -p /data/web_static/releases/test
 
 cat - >| /data/web_static/releases/test/index.html << 'EOF'
 <html>
-  <head></head>
-  <body>Hello World</body>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
 </html>
 EOF
 
@@ -29,4 +32,3 @@ b done
 service nginx restart
 
 ufw allow 'Nginx HTTP'
-
