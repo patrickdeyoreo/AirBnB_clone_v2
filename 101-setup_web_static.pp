@@ -11,11 +11,10 @@ $index_html = "\
 "
 $hbnb_static_match = '^\s*listen\s+80\s+default_server;\s*$'
 $hbnb_static_line = "\
-	listen 80 default_server;
-
 	location /hbnb_static/ {
 		alias /data/web_static/current/;
 	}
+	listen 80 default_server;
 "
 $data_dirs =  [ '/data',
                 '/data/web_static',
@@ -24,9 +23,7 @@ $data_dirs =  [ '/data',
                 '/data/web_static/shared',
 ]
 
-package { 'nginx':
-  ensure  => 'installed',
-}
+package { 'nginx': }
 
 service { 'nginx':
   ensure     => 'running',
@@ -54,7 +51,7 @@ file { '/data/web_static/releases/test/index.html':
 }
 
 file_line { 'hbnb_static':
-  ensure  => 'present',
+  path    => '/etc/nginx/sites-available/default',
   line    => $hbnb_static_line,
   match   => $hbnb_static_match,
   require => Package['nginx'],
@@ -62,6 +59,6 @@ file_line { 'hbnb_static':
 }
 
 exec { "ufw allow 'Nginx HTTP'":
-  path    => '/usr/sbin:/usr/bin:/sbin:/bin',
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
   require => Package['nginx'],
 }
