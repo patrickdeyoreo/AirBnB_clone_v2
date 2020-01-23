@@ -42,8 +42,16 @@ class FileStorage:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             self.__objects[key] = obj
 
+    def delete(self, obj=None):
+        """delete obj from __objects
+        """
+        if isinstance(obj, BaseModel):
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            if key in self.__objects:
+                del self.__objects[key]
+
     def save(self):
-        """serialize the file path to JSON file path
+        """serialize data to the JSON file
         """
         new_dict = {key: obj.to_dict()
                     for key, obj in self.__objects.items()}
@@ -51,7 +59,7 @@ class FileStorage:
             json.dump(new_dict, f)
 
     def reload(self):
-        """serialize the file path to JSON file path
+        """deserialize data from the JSON file
         """
         try:
             with open(self.__file_path, 'r', encoding="UTF-8") as f:
@@ -61,10 +69,7 @@ class FileStorage:
         except FileNotFoundError:
             pass
 
-    def delete(self, obj=None):
-        """delete obj from __objects
+    def close(self):
+        """alias for reload
         """
-        if isinstance(obj, BaseModel):
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            if key in self.__objects:
-                del self.__objects[key]
+        self.reload()

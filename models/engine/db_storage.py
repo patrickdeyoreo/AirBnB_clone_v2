@@ -58,16 +58,16 @@ class DBStorage:
         if obj:
             self.__session.add(obj)
 
-    def save(self):
-        """Save changes made this session
-        """
-        self.__session.commit()
-
     def delete(self, obj=None):
         """Delete an object from the session
         """
         if obj:
             self.__session.delete(obj)
+
+    def save(self):
+        """Save changes made this session
+        """
+        self.__session.commit()
 
     def reload(self):
         """Create all tables and load database
@@ -77,3 +77,8 @@ class DBStorage:
             sessionmaker(bind=self.__engine, expire_on_commit=False)
         )
         self.__session = Session()
+
+    def close(self):
+        """Close the session reload
+        """
+        self.__session.close()
