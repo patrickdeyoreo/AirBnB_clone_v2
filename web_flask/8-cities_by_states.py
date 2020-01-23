@@ -11,7 +11,7 @@ HOST = '0.0.0.0'
 PORT = '5000'
 
 
-@app.route('/states_list')
+@app.route('/states_list', strict_slashes=False)
 def states_list():
     '''
     list states
@@ -21,7 +21,7 @@ def states_list():
     return render_template(TEMPLATE, states=STATES)
 
 
-@app.route('/cities_by_states')
+@app.route('/cities_by_states', strict_slashes=False)
 def cities_by_states():
     '''
     list cities by state
