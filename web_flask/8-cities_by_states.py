@@ -16,9 +16,17 @@ def cities_by_states():
     '''
     list cities by state
     '''
-    TEMPLATE = '8-cities_by_states.html'
-    STATES = storage.all(State).values()
-    return render_template(TEMPLATE, states=STATES)
+    template = '8-cities_by_states.html'
+    states = storage.all(State).values()
+    return render_template(template, states=states)
+
+
+@app.teardown_appcontext
+def close_storage(exc):
+    '''
+    close storage
+    '''
+    storage.close()
 
 
 if __name__ == '__main__':

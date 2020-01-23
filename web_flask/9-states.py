@@ -11,14 +11,16 @@ HOST = '0.0.0.0'
 PORT = '5000'
 
 
-@app.route('/states_list', strict_slashes=False)
-def states_list():
+@app.route('/states', strict_slashes=False)
+@app.route('/states/<id>', strict_slashes=False)
+def states_id(id=None):
     '''
-    list states
+    list states or show details of a particular state
     '''
-    template = '7-states_list.html'
-    states = storage.all(State).values()
-    return render_template(template, states=states)
+    template = '9-states.html'
+    states = storage.all(State)
+    key = None if id is None else 'State.{id}'.format(id=id)
+    return render_template(template, states=states, key=key)
 
 
 @app.teardown_appcontext
