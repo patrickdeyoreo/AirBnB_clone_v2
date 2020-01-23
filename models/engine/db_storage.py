@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""This is a DBStorage class for Airbnb"""
+"""This is a DBStorage class for AirBnB"""
 import os
 
 from sqlalchemy import create_engine
