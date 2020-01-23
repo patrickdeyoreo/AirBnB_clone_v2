@@ -16,7 +16,11 @@ def states_list():
     list of states
     '''
     template = '7-states_list.html'
-    return render_template(template, states=storage.all(State))
+    states = storage.all(State)
+    if states:
+        return render_template(template, states=states.values())
+    else:
+        return render_template(template, states=[])
 
 
 if __name__ == '__main__':
