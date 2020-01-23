@@ -2,7 +2,8 @@
 '''
 Start a Flask web application
 '''
-from models import State, storage
+from models import storage
+from models.state import State
 from flask import Flask, render_template
 app = Flask(__name__)
 
@@ -13,14 +14,18 @@ PORT = '5000'
 @app.route('/states_list', strict_slashes=False)
 def states_list():
     '''
-    list of states
+    list states
     '''
-    template = '7-states_list.html'
-    states = storage.all(State)
-    if states:
-        return render_template(template, states=states.values())
-    else:
-        return render_template(template, states=[])
+    TEMPLATE = '7-states_list.html'
+    return render_template(TEMPLATE, states=storage.all(State).values())
+
+
+@app.teardown_appcontext
+def close_storage():
+    '''
+    close storage
+    '''
+    storage.close()
 
 
 if __name__ == '__main__':
