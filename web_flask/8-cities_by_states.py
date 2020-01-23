@@ -11,7 +11,7 @@ HOST = '0.0.0.0'
 PORT = '5000'
 
 
-@app.route('/states_list', strict_slashes=False)
+@app.route('/states_list')
 def states_list():
     '''
     list states
@@ -21,12 +21,15 @@ def states_list():
     return render_template(TEMPLATE, states=STATES)
 
 
-@app.teardown_appcontext
-def close_storage(*args):
+@app.route('/cities_by_states')
+def cities_by_states():
     '''
-    close storage
+    list cities by state
     '''
-    storage.close()
+    TEMPLATE = '8-cities_by_states.html'
+    STATES = storage.all(State).values()
+    STATE_CITIES = {state.id: state.cities for state in STATES}
+    return render_template(TEMPLATE, states=STATES, state_cities=STATE_CITIES)
 
 
 if __name__ == '__main__':
