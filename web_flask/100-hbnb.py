@@ -4,8 +4,9 @@ Start a Flask web application
 '''
 from models import storage
 from models.amenity import Amenity
-from models.place import place
+from models.place import Place
 from models.state import State
+from models.user import User
 from flask import Flask, render_template
 app = Flask(__name__)
 
@@ -18,13 +19,15 @@ def hbnb_filters():
     '''
     list states or show details of a particular state
     '''
-    template = '100-hbnb.html'
-    kwargs = {
-        'amenities': storage.all(Amenity).values(),
-        'places': storage.all(Place).values(),
-        'states': storage.all(State).values(),
-    }
-    return render_template(template, **kwargs)
+    temp = '100-hbnb.html'
+    amenities = storage.all(Amenity).values()
+    states = storage.all(State).values()
+    places = storage.all(Place).values()
+    users = storage.all(User)
+    users = {p.id: users['User.{}'.format(p.user_id)] for p in places}
+    return render_template(
+        temp, amenities=amenities, states=states, places=places, users=users
+    )
 
 
 @app.teardown_appcontext
